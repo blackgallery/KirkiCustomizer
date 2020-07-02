@@ -21,12 +21,18 @@ Kirki::add_panel( 'customizer_panel_id', array(
 /* ------------------------------------ */
 Kirki::add_section( 'header_sec', array(
     'priority'    => 30,
-	'title'       => esc_html__( 'Header Settings', 'curver' ), 
+	'title'       => esc_html__( 'Header Settings', 'refib-tidytheme' ), 
 	'panel'       => 'customizer_panel_id',
 ) );
+Kirki::add_section( 'footer_sec', array(
+    'priority'    => 40,
+    'title'       => esc_html__( 'Footer Settings', 'refib-tidytheme' ),
+	'panel'       => 'customizer_panel_id',
+) );
+
 Kirki::add_section( 'styling', array(
     'priority'    => 80,
-    'title'       => esc_html__( 'Styling', 'curver' ),
+    'title'       => esc_html__( 'Styling', 'refib-tidytheme' ),
 	'panel'       => 'customizer_panel_id',
 ) );
 
@@ -439,7 +445,77 @@ Kirki::add_field( 'refib_theme', [
 <?php endif; ?>
 
 
-/*  Section:: 2	//  Styling  Fields
+/*  Section:: 2	//  Footer  Fields
+/* ========================================= */
+
+//  Footer-Copy right text control
+Kirki::add_field( 'refib_theme', [
+	'type'        => 'switch',
+	'settings'    => 'copy_right_onoff_setting',
+	'label'       => esc_html__( 'Enable Footer Copyright text', 'refib-tidytheme' ),
+	'section'     => 'footer_sec',
+	'default'     => '1', 
+	'choices'     => [
+		'on'  => esc_html__( 'Enable', 'refib-tidytheme' ),
+		'off' => esc_html__( 'Disable', 'refib-tidytheme' ),
+	],
+] );
+
+//  Footer-Copy right text control
+Kirki::add_field( 'refib_theme', [
+	'type'     => 'textarea',
+	'settings' => 'footer_text_setng',
+	'label'    => esc_html__( 'Footer Copyright text', 'refib-tidytheme' ),
+	'section'  => 'footer_sec',
+	'default'  => esc_html__( 'Copyright 2020, All Rights Reserved', 'refib-tidytheme' ), 
+	'partial_refresh'    => [
+		'footer_text_edit_icon' => [
+			'selector'        => '.refit_footer_bottom .copyright_text',
+			'render_callback' => function() {
+				return get_theme_mod('footer_text_setng');
+			},
+		],
+	],
+	'active_callback' => [
+		[
+			'setting'  => 'copy_right_onoff_setting',
+			'operator' => '==',
+			'value'    => true,
+		]
+	],
+] );
+
+//// Output ::: Footer Copyright text
+
+<?php 
+ $footer_copyright_text_allow_tags =array(
+    'a' => array(
+        'href' => array(),
+        'title' => array()
+    ),
+    'img' => array(
+        'alt' => array(),
+        'src' => array()
+    ), 
+    'br' => array(),
+    'em' => array(),
+    'strong' => array(),
+ );
+
+if ( true == get_theme_mod( 'copy_right_onoff_setting', true ) ) : ?>
+
+<div class="copyright_text">
+<?php $footer_copyright_text = get_theme_mod( 'footer_text_setng' );
+
+if(!empty($footer_copyright_text))
+	{echo wp_kses($footer_copyright_text, $footer_copyright_text_allow_tags);} 
+	else {esc_html_e('Copyright @ refib - All Right Reserved 2018', 'refib-tidytheme'); } 	
+?> 
+
+</div>
+<?php endif; ?> 
+
+/*  Section:: 3	//  Styling  Fields
 /* ========================================= */
 /**
  * Add the Body-typography control
